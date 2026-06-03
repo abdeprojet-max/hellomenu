@@ -52,7 +52,8 @@ function StatCard({ icon, iconBg, label, value, badgeLabel, badgeColor, actionLa
   )
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
+  const { success } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
@@ -78,6 +79,15 @@ export default async function DashboardPage() {
 
   return (
     <div className="hm-page-inner">
+      {success === 'true' && (
+        <div style={{ background: '#dcfce7', border: '1px solid #86efac', borderRadius: 12, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🎉</span>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 700, color: '#15803d', margin: 0 }}>Abonnement activé !</p>
+            <p style={{ fontSize: 13, color: '#16a34a', margin: 0 }}>Votre plan a été mis à jour. Profitez de toutes vos fonctionnalités.</p>
+          </div>
+        </div>
+      )}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: '#1c1917', margin: '0 0 4px', letterSpacing: -.6 }}>
           Bonjour{profile?.full_name ? `, ${profile.full_name}` : ''} 👋

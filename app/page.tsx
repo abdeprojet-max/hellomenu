@@ -59,17 +59,14 @@ export default function LandingPage() {
     <div style={{ minHeight: '100vh', background: '#fafaf5', fontFamily: 'inherit' }}>
       {/* Header */}
       <header className="hm-marketing-header">
-        <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 28px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 28px', height: 60, display: 'flex', alignItems: 'center', width: '100%' }}>
           <HmLogo href="/" size="sm" />
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <Link href="/pricing" style={{ fontSize: 14, fontWeight: 500, color: '#44403c', textDecoration: 'none' }}>Tarifs</Link>
-          </nav>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Link href="/auth/login">
-              <button className="hm-btn hm-btn-outline hm-btn-sm">Connexion</button>
-            </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginLeft: 'auto' }}>
             <Link href="/auth/register">
               <button className="hm-btn hm-btn-primary hm-btn-sm">Essai gratuit</button>
+            </Link>
+            <Link href="/auth/login" style={{ fontSize: 14, fontWeight: 500, color: '#78716c', textDecoration: 'none' }}>
+              Connexion
             </Link>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Crown, Sparkles } from 'lucide-react'
+import { Crown, Sparkles, Settings } from 'lucide-react'
 import { toast } from 'sonner'
 import { DIET_LABELS, GOAL_LABELS, PLAN_LIMITS, type DietaryPreference, type Goal, type Profile } from '@/lib/types'
 
@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [goal, setGoal] = useState<Goal>('maintien')
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [portalLoading, setPortalLoading] = useState(false)
 
   useEffect(() => {
     async function loadProfile() {
@@ -33,6 +34,17 @@ export default function ProfilePage() {
     }
     loadProfile()
   }, [])
+
+  async function handlePortal() {
+    setPortalLoading(true)
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else toast.error('Erreur lors de l\'ouverture du portail')
+    } catch { toast.error('Erreur de connexion') }
+    finally { setPortalLoading(false) }
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
@@ -92,13 +104,26 @@ export default function ProfilePage() {
             {planLimits.savedMenus === Infinity ? 'Menus illimités' : `${planLimits.savedMenus} menus sauvegardés`}
           </span>
         </div>
-        {planType === 'free' && (
-          <Link href="/pricing">
-            <button className="hm-btn hm-btn-primary hm-btn-sm">
-              <Sparkles size={13} /> Passer à Premium
-            </button>
-          </Link>
-        )}
+        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+          {planType === 'free' ? (
+            <Link href="/pricing">
+              <button className="hm-btn hm-btn-primary hm-btn-sm">
+                <Sparkles size={13} /> Passer à Premium
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/pricing">
+                <button className="hm-btn hm-btn-outline hm-btn-sm">
+                  <Sparkles size={13} /> Changer de plan
+                </button>
+              </Link>
+              <button className="hm-btn hm-btn-outline hm-btn-sm" onClick={handlePortal} disabled={portalLoading}>
+                <Settings size={13} /> {portalLoading ? 'Redirection…' : 'Gérer l\'abonnement'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Preferences card */}

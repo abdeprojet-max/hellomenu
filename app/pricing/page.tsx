@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { HmLogo } from '@/components/hm-logo'
 import { Check } from 'lucide-react'
@@ -16,9 +17,10 @@ const plans = [
     popular: false,
     features: [
       '5 générations de menus par mois',
-      '3 menus sauvegardés',
+      '1 menu sauvegardé',
       'Toutes les options de régime',
       'Édition des menus générés',
+      'Valeurs nutritionnelles',
     ],
     cta: 'Commencer gratuitement',
     href: '/auth/register',
@@ -32,11 +34,13 @@ const plans = [
     description: 'Pour une planification régulière',
     popular: true,
     features: [
-      '30 générations de menus par mois',
+      '15 générations de menus par mois',
       '20 menus sauvegardés',
       'Toutes les options de régime',
       'Édition des menus générés',
-      'Support prioritaire',
+      'Valeurs nutritionnelles',
+      'Liste de courses imprimable',
+      'Partage de menus (5 partages)',
     ],
     cta: 'Choisir Medium',
     href: null,
@@ -50,11 +54,12 @@ const plans = [
     description: 'Pour les familles et les passionnés',
     popular: false,
     features: [
-      'Générations illimitées',
+      '30 générations par mois',
       'Menus sauvegardés illimités',
-      'Toutes les options de régime',
-      'Édition des menus générés',
-      'Support prioritaire',
+      'Génération mensuelle (4 semaines)',
+      'Recettes détaillées pour chaque repas',
+      'Partage illimité jour par jour',
+      'Partage du menu complet',
       'Accès en avant-première aux nouveautés',
     ],
     cta: 'Choisir Premium',
@@ -65,6 +70,8 @@ const plans = [
 
 export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const canceled = searchParams.get('canceled') === 'true'
 
   async function handleSubscribe(plan: string) {
     setLoading(plan)
@@ -105,6 +112,11 @@ export default function PricingPage() {
       </header>
 
       <main style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 28px 80px' }}>
+        {canceled && (
+          <div style={{ background: '#fef9c3', border: '1px solid #fde047', borderRadius: 12, padding: '14px 18px', marginBottom: 28, textAlign: 'center' }}>
+            <p style={{ fontSize: 14, color: '#854d0e', margin: 0 }}>Paiement annulé — aucun montant n&apos;a été débité. Choisissez un plan quand vous êtes prêt.</p>
+          </div>
+        )}
         <div style={{ textAlign: 'center', marginBottom: 52 }}>
           <h1 style={{ fontSize: 36, fontWeight: 800, color: '#1c1917', margin: '0 0 12px', letterSpacing: -1 }}>
             Des tarifs simples et transparents
