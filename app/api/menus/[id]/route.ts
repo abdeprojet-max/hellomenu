@@ -19,9 +19,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
 
   const body = await request.json()
+  const allowed = ['title', 'meals', 'is_favorite', 'share_token']
+  const patch = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)))
   const { data, error } = await supabase
     .from('menus')
-    .update(body)
+    .update(patch)
     .eq('id', id)
     .eq('user_id', user.id)
     .select()
