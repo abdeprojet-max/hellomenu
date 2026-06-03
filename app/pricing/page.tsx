@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { HmLogo } from '@/components/hm-logo'
@@ -68,7 +68,7 @@ const plans = [
   },
 ]
 
-export default function PricingPage() {
+function PricingContent() {
   const [loading, setLoading] = useState<string | null>(null)
   const searchParams = useSearchParams()
   const canceled = searchParams.get('canceled') === 'true'
@@ -190,5 +190,13 @@ export default function PricingPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense>
+      <PricingContent />
+    </Suspense>
   )
 }
