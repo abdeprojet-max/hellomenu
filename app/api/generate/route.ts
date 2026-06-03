@@ -15,9 +15,22 @@ export async function POST(request: Request) {
   const limits = PLAN_LIMITS[planType]
 
   const body = await request.json()
-  const { period, nb_persons, diet_type, goal, free_text } = body as {
+  const { period, nb_persons, diet_type, goal, free_text: rawFreeText } = body as {
     period: Period; nb_persons: number; diet_type: DietaryPreference; goal: Goal; free_text: string
   }
+
+  const VALID_PERIODS: Period[] = ['semaine', 'mois']
+  const VALID_DIETS: DietaryPreference[] = ['equilibre', 'sain', 'vegan', 'sportif', 'gourmand']
+  const VALID_GOALS: Goal[] = ['maintien', 'perte_poids', 'prise_masse']
+
+  if (!VALID_PERIODS.includes(period) || !VALID_DIETS.includes(diet_type) || !VALID_GOALS.includes(goal)) {
+    return NextResponse.json({ error: 'Paramètres invalides' }, { status: 400 })
+  }
+  if (typeof nb_persons !== 'number' || nb_persons < 1 || nb_persons > 20) {
+    return NextResponse.json({ error: 'Nombre de personnes invalide' }, { status: 400 })
+  }
+
+  const free_text = typeof rawFreeText === 'string' ? rawFreeText.slice(0, 500) : ''
 
   // Block monthly for non-premium
   if (period === 'mois' && !limits.allowMonthly) {
