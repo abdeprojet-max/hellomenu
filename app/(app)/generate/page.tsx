@@ -213,12 +213,12 @@ export default function GeneratePage() {
             className="hm-textarea"
             placeholder="Ex: j'ai envie de pasta cette semaine, pas de poisson..."
             value={freeText}
-            onChange={(e) => setFreeText(e.target.value.slice(0, 500))}
-            maxLength={500}
+            onChange={(e) => setFreeText(e.target.value.slice(0, 250))}
+            maxLength={250}
             rows={3}
           />
-          <div style={{ fontSize: 11.5, color: freeText.length > 450 ? '#ef4444' : '#a8a29e', textAlign: 'right', marginTop: 4 }}>
-            {freeText.length}/500
+          <div style={{ fontSize: 11.5, color: freeText.length > 200 ? '#ef4444' : '#a8a29e', textAlign: 'right', marginTop: 4 }}>
+            {freeText.length}/250
           </div>
         </div>
 

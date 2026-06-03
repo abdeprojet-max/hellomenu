@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Nombre de personnes invalide' }, { status: 400 })
   }
 
-  const free_text = typeof rawFreeText === 'string' ? rawFreeText.slice(0, 500) : ''
+  const free_text = typeof rawFreeText === 'string' ? rawFreeText.slice(0, 250) : ''
 
   // Block monthly for non-premium
   if (period === 'mois' && !limits.allowMonthly) {
