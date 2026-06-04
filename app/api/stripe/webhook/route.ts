@@ -27,9 +27,11 @@ export async function POST(request: Request) {
     const plan = session.metadata?.plan
 
     if (userId && plan) {
-      await supabase.from('profiles').update({ plan_type: plan }).eq('id', userId)
+      const { error: profileError } = await supabase
+        .from('profiles').update({ plan_type: plan }).eq('id', userId)
+      if (profileError) console.error('Webhook profile update failed:', profileError)
 
-      await supabase.from('subscriptions').upsert({
+      const { error: subError } = await supabase.from('subscriptions').upsert({
         user_id: userId,
         stripe_subscription_id: session.subscription as string,
         stripe_customer_id: session.customer as string,
@@ -37,6 +39,9 @@ export async function POST(request: Request) {
         status: 'active',
         current_period_end: null,
       })
+      if (subError) console.error('Webhook subscription upsert failed:', subError)
+    } else {
+      console.error('Webhook missing metadata:', { userId, plan })
     }
   }
 
